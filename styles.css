@@ -1,0 +1,487 @@
+/* Basic layout */
+* { box-sizing: border-box; }
+html,body { height: 100%; }
+body{
+  margin:0;
+  font-family: Bebas Neue,system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color:#111;
+  color:#fff;
+  line-height:1.4;
+
+  /* page background image (adjust filename/path as needed) */
+  background-image: url("Porter_Robinson_-_Worlds.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover; /* fill viewport, avoid side gaps */
+  background-attachment: fixed;
+
+  /* prevent horizontal scrollbar when half the image sits off-screen */
+  overflow-x: hidden;
+}
+
+/* Blurred overlay layer that fades from top to bottom */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image: url("Porter_Robinson_-_Worlds.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  /* reduce blur strength */
+  filter: blur(6px); /* was 12px */
+
+  transform: scale(1.03);
+  pointer-events:none;
+  z-index:0;
+
+  /* make top strongly blurred but bottom only slightly */
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.08) 100%);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.08) 100%);
+}
+
+/* Header / Nav */
+header{
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  padding:1.125rem 1.5rem;
+  background: rgba(255,255,255,0.85);
+  color: #111;
+  transition: background-color 300ms ease, color 300ms ease, backdrop-filter 300ms ease;
+}
+header.transparent{
+  background: rgba(255,255,255,0.06);
+  color:#fff;
+  backdrop-filter: blur(6px) saturate(1.1);
+}
+.site-brand h1{ margin:0; font-size:1.6875rem; color:inherit; }
+
+.nav { display:flex; align-items:center; gap:2rem; }
+.nav-list { list-style:none; margin:0; padding:0; display:flex; gap:1.5rem; }
+.nav-list a{
+  text-decoration:none;
+  color:#111;
+  font-weight:600;
+  font-size:1.25rem;
+  padding:0.5rem 0.25rem;
+  border-radius:4px;
+}
+header.transparent .nav-list a{ color:#fff; }
+
+/* Main card / cropped image */
+main{ display:flex; justify-content:center; align-items:flex-start; padding:3rem 1rem; min-height:60vh; position:relative; z-index:2; }
+
+.card{
+  width:1346px;
+  height:754px;
+  max-width:100%;
+  overflow:hidden;
+  border-radius:24px;
+  margin:0 auto;
+  box-shadow:0 8px 24px rgba(0,0,0,0.35);
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* keep the source image larger than the frame so it's cropped */
+.center-image{
+  width:1595px;
+  height:899px;
+  object-fit:cover;
+  display:block;
+  transform: none;
+}
+
+/* overlay captions */
+.image-caption{ position:absolute; inset:0; z-index:5; pointer-events:auto; }
+
+/* shared caption style; container hugs content */
+.caption-content{
+  position:absolute;
+  background: rgba(0,0,0,0.45);
+  color:#fff;
+  padding:0.35rem 0.6rem;
+  border-radius:12px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.4);
+  display:inline-block;
+  width:auto;
+  max-width: calc(100% - 2rem);
+}
+
+/* left bottom */
+.caption-content.left{ left:1.25rem; bottom:1.25rem; text-align:left; }
+/* right bottom */
+.caption-content.right{ right:1.25rem; bottom:1.25rem; text-align:right; }
+
+/* large DJ RINERA text (left caption) */
+.caption-content.left p{
+  margin:0;
+  font-size:128px;
+  line-height:0.95;
+  font-weight:700;
+}
+
+/* right caption headings */
+.caption-content.right h3{ margin:0 0 0.25rem 0; font-size:18px; font-weight:600; }
+
+/* Below section and cards */
+.below-section{
+  padding:2rem 1rem;     /* reduce vertical whitespace */
+  min-height:70vh;      /* shorter section so works section sits closer */
+  display:flex;
+  align-items:flex-start;
+  z-index:1;
+  color:#fff;
+}
+.below-section .container{ width:min(1100px,94%); margin:0 auto; }
+.cards-row{ display:flex; gap:1rem; flex-wrap:wrap; margin-top:1rem; }
+.mini-card{ flex:1 1 220px; background: rgba(0,0,0,0.45); padding:1rem; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.35); color:#fff; }
+.track-btn{ display:inline-block; background:#0b5fff; color:#fff; border:0; padding:0.6rem 1rem; border-radius:8px; font-weight:700; cursor:pointer; }
+
+/* Works description positioned to the right */
+.works.description{
+  position:relative;
+  min-height: 200vh; /* or 500px, etc. */
+  padding-bottom: 15rem; /* adjust (e.g. 2rem, 4rem, 8rem) */
+}
+
+/* cover image placed to the left of the right-side container */
+.works.description .works-image{
+  position: absolute;
+  /* force the image to the exact size requested */
+  width: 1324px;
+  height: 1324px;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+
+  /* move half the image off the left side of the viewport:
+     half of 1324px = 662px, so left: -662px */
+  left: -662px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  /* rotate around the image center */
+  transform-origin: 50% 50%;
+
+  /* <-- change the "2s" to speed up/slow down the rotation */
+  animation: spin 5s linear infinite; /* e.g. 1s = faster, 5s = slower */
+
+  will-change: transform;
+
+  /* remove the "box" look */
+  border-radius: 0;
+  box-shadow: none;
+  z-index: 2;
+}
+
+/* rotation keyframes keep the translateY positioning stable while rotating */
+@keyframes spin {
+  from { transform: translateY(-50%) rotate(0deg); }
+  to   { transform: translateY(-50%) rotate(360deg); }
+}
+
+/* keep the existing right-positioned container */
+.works.description .container{
+  position:absolute;
+  right:2.5rem;
+  top:45%;
+  transform:translateY(-50%);
+  width:50vw;
+  max-width:700px;
+  min-width:320px;
+  padding:1.5rem 2rem;
+  background: rgba(255,255,255,0.06);
+  border-radius:12px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.35);
+  text-align:center;
+  margin: 0;
+}
+
+/* typography for works (per your request) */
+.works.description .container h2{ font-size:48px; margin:0 0 .75rem 0; line-height:1.05; color:#fff; }
+.works.description .container p{ font-size:24px; margin:0; line-height:1.4; color:rgba(255,255,255,0.95); }
+
+/* responsive fallback */
+@media (max-width:900px){
+  body::before{ background-size: cover; background-attachment: scroll; }
+  .works.description .container{ position:static; transform:none; width:90%; padding:1rem; margin:2rem auto; }
+  .caption-content.left p{ font-size:48px; } /* scale down huge left text on small screens */
+  .works.description { padding-bottom: 3rem; } /* smaller on mobile */
+}
+
+/* responsive: stack image above container on narrow screens */
+@media (max-width: 900px){
+  .works.description .works-image{
+    position: static;
+    transform: none;
+    width: 90%;
+    max-width: none;
+    margin: 0 auto 1rem auto;
+    display: block;
+  }
+  .works.description .container{
+    position: static;
+    transform: none;
+    width: 90%;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+}
+
+/* keep header & main above overlay */
+header, main, footer, .card { position: relative; z-index: 2; }
+
+.terrarria-section{
+  margin-top: 10rem;
+  margin-bottom: 10rem;
+}
+
+/* terraria layout: larger logos and more spacing */
+.terraria-row{
+  display:flex;
+  gap:3rem; /* space between logos */
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  padding:1rem 0;
+}
+
+.terraria-row .mini-card{
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  background:transparent;
+  border-radius:0;
+  box-shadow:none;
+  border:none;
+  margin:0;
+}
+
+/* ~30% larger than previous ~125px -> ~162px */
+.terraria-row .mini-card img{
+  width:162px;
+  max-width:100%;
+  height:auto;
+  display:block;
+  margin:0;
+}
+
+/* extra horizontal breathing room for the center logo (sporttera) */
+.terraria-row .mini-card:nth-child(2) img{
+  margin-left:5rem;
+  margin-right:5rem;
+}
+
+/* responsive fallback */
+@media (max-width:900px){
+  .terraria-row{ gap:1.25rem; }
+  .terraria-row .mini-card img{ width:120px; }
+}
+
+/* large spacer below the terraria section */
+.terraria {
+  padding-bottom: 50rem; /* quite a lot of space — adjust value as needed */
+  margin-bottom: 0;
+}
+
+/* terraria: cover blurred page background with a panel */
+.terraria{
+  position: relative;
+  z-index: 3;                         /* above body::before (z-index:0) */
+  background: rgba(0,0,0,0.85);       /* opaque panel to hide blur; adjust alpha */
+  padding: 2rem 1rem;                 /* keep spacing */
+  border-radius: 8px;                 /* optional */
+}
+
+/* terraria becomes a video container */
+.terraria {
+  position: relative;
+  overflow: hidden;
+  /* cover the full viewport height */
+  height: 100vh;
+  min-height: 100vh;
+  padding: 2rem 1rem;       /* keep some internal spacing if you want */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* center content vertically */
+  align-items: center;
+  z-index: 2;               /* content above bg video */
+  /* remove big spacer if previously set */
+  padding-bottom: 0;
+}
+.terraria .terraria-bg{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* ensure content sits above overlay */
+.terraria .container{ position: relative; z-index: 3; }
+
+/* responsive: hide video on small screens to save data / avoid autoplay issues */
+@media (max-width: 900px){
+  .terraria .terraria-bg{ display: none; }
+  .terraria::before{ display: none; } /* keep plain background or use poster */
+  .terraria{ background-image: url('images/tera-poster.jpg'); background-size: cover; background-position: center; }
+}
+
+/* terraria bottom video */
+.terraria-video-wrap{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:100%;
+  margin-top:2rem;
+  padding: 1rem 0 3rem; /* space around video */
+  z-index:4; /* above blurred overlay */
+}
+.terraria-video{
+  width:90%;
+  max-width:1000px;
+  height:auto;
+  object-fit:cover;
+  border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.45);
+  display:block;
+}
+
+/* responsive: smaller video on narrow screens */
+@media (max-width:900px){
+  .terraria-video{ width:95%; max-width:720px; border-radius:8px; }
+  .terraria-video-wrap{ padding-bottom:2rem; }
+}
+
+/* responsive: reduce spacing on small screens */
+@media (max-width: 900px) {
+  .terraria {
+    padding-bottom: 8rem;
+  }
+}
+
+/* smooth blurred top edge for the terraria section */
+.terraria {
+  position: relative; /* ensure pseudo elements are positioned correctly */
+}
+
+/* top fade that blurs the content behind the section for a smooth transition */
+.terraria::after{
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 140px; /* adjust how tall the softened edge should be */
+  z-index: 2;    /* sits above bg but below .container (which is z-index:3) */
+  pointer-events: none;
+
+  /* soft gradient to fade the blur out */
+  background: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0));
+
+  /* actual blur of what's behind this element (modern browsers) */
+  -webkit-backdrop-filter: blur(12px) saturate(0.9);
+  backdrop-filter: blur(12px) saturate(0.9);
+  transition: opacity 250ms ease;
+}
+
+/* Fallback for browsers without backdrop-filter: draw a matching dark-to-transparent gradient */
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .terraria::after{
+    /* stronger solid gradient so it visually mimics the transition */
+    background: linear-gradient(to bottom, rgba(17,17,17,0.85), rgba(17,17,17,0));
+    /* remove unsupported properties */
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* make terraria background video truly full-bleed (touch both viewport edges) */
+.terraria {
+  position: relative;
+  overflow: visible; /* allow video to extend to viewport edges */
+  /* keep internal padding for content but it won't affect the bg video */
+  padding: 2rem 1rem;
+}
+
+/* full-bleed background video */
+.terraria .terraria-bg {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100vw;            /* span the full viewport width */
+  height: 100%;
+  transform: translateX(-50%); /* center the video across the viewport */
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* if you want the video to also extend under the fixed header, use this instead:
+   .terraria .terraria-bg { top: -72px; height: calc(100% + 72px); }
+   (replace 72px with your header height) */
+
+/* remove rounded corners on the section if they hide the edges */
+.terraria { border-radius: 0; }
+
+/* inner shadow for terraria logos */
+.terraria-row .mini-card{
+  position: relative; /* create stacking context for pseudo */
+  overflow: visible;
+}
+
+.terraria-row .mini-card::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 4px; /* match logo rounding if any, or use 0 */
+  /* dual inset shadows for depth; adjust colors/strength as needed */
+  box-shadow:
+    inset 0 30px 40px rgba(0,0,0,0.55),
+    inset 0 -10px 20px rgba(0,0,0,0.35);
+  mix-blend-mode: multiply; /* helps blend with the PNG */
+  z-index: 2;
+}
+
+/* ensure the img sits below the overlay */
+.terraria-row .mini-card img{
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+/* small caption under terraria logos */
+.terraria-text{
+  width:100%;
+  text-align:center;
+  margin-top:1rem;
+  z-index:3; /* ensure it's above the background video/overlay */
+}
+.terraria-small{
+  margin:0;
+  font-size:12px;
+  line-height:1.4;
+  color: rgba(255,255,255,0.85);
+  max-width:900px;
+  margin-left:auto;
+  margin-right:auto;
+  padding: 0 1rem;
+}
+
+/* responsive tweak */
+@media (max-width:900px){
+  .terraria-small{ font-size:12px; }
+}
+
